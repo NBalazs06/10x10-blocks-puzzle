@@ -1,0 +1,91 @@
+body {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 8px;
+}
+
+#gameOverText {
+    display: none;
+    font-size: 80px;
+}
+
+#help {
+    font-size: 16px;
+    padding: 4px;
+}
+
+#playAgainButton {
+    width: 240px;
+    height: 120px;
+    font-size: xx-large;
+    display: none;
+}
+
+#grid {
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    width: 344px;
+    height: 344px;
+    background-color: rgb(50, 50, 50);
+    padding: 10px;
+}
+
+#scoreDisplay {
+    font-size: 32px;
+    padding: 8px;
+}
+
+.squareSlot {
+    background-color: rgb(70, 70, 70);
+    width: 30px;
+    height: 30px;
+    transition: background-color 0.2s ease-out;
+    cursor: pointer;
+}
+
+#shapeSelector .squareSlot {
+    background-color: rgb(50, 50, 50);
+    margin: 4px;
+}
+
+#shapeSelector {
+    background-color: rgb(50, 50, 50);
+    width: 180px;
+    height: 550px;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.shapeOption {
+    width: 144px;
+    height: 144px;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    padding: 10px;
+    cursor: pointer;
+}
+
+@keyframes blackWhiteAlternating {
+    0% {
+        outline-color: white;
+    }
+    
+    50% {
+        outline-color: black;
+    }
+    
+    100% {
+        outline-color: white;
+    }
+}
+
+#shapeSelector .squareSlot:nth-child(2) {
+    outline: 2px dashed white;
+    animation: blackWhiteAlternating 1s infinite;
+}

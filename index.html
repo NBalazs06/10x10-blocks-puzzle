@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10x10 Blocks Puzzle</title>
+    <link rel="stylesheet" href="10x10_blocks.css">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+</head>
+<body>
+    <p id="gameOverText">Game over!</p>
+    <div id="gridAndScoreDisplay">
+        <div id="grid"></div>
+
+        <div>
+            <p id="scoreDisplay">Score: <span id="scoreNum">0</span></p>
+            <p id="help">Click on a shape to select it, then click on the position of the grid where you want to put it.</p>
+        </div>
+    </div>
+    
+    <div id="shapeSelector">
+        <div class="shapeOption"></div>
+
+        <hr>
+
+        <div class="shapeOption"></div>
+
+        <hr>
+
+        <div class="shapeOption"></div>
+    </div>
+
+    <button id="playAgainButton">Play again</button>
+    <script src="10x10_blocks.js"></script>
+</body>
+</html>
