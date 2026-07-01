@@ -8,14 +8,32 @@ body {
     gap: 8px;
 }
 
-#gameOverText {
-    display: none;
-    font-size: 80px;
+.squareSlot {
+    background-color: rgb(70, 70, 70);
+    width: 30px;
+    height: 30px;
+    transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer;
+}
+
+.shapeOption {
+    width: 144px;
+    height: 144px;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    padding: 10px;
+    cursor: pointer;
 }
 
 #help {
     font-size: 16px;
     padding: 4px;
+}
+
+#gameOverText {
+    display: none;
+    font-size: 80px;
 }
 
 #playAgainButton {
@@ -40,19 +58,6 @@ body {
     padding: 8px;
 }
 
-.squareSlot {
-    background-color: rgb(70, 70, 70);
-    width: 30px;
-    height: 30px;
-    transition: background-color 0.2s ease-out;
-    cursor: pointer;
-}
-
-#shapeSelector .squareSlot {
-    background-color: rgb(50, 50, 50);
-    margin: 4px;
-}
-
 #shapeSelector {
     background-color: rgb(50, 50, 50);
     width: 180px;
@@ -61,14 +66,14 @@ body {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
-.shapeOption {
-    width: 144px;
-    height: 144px;
-    display: grid;
-    grid-template-rows: repeat(4, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    padding: 10px;
-    cursor: pointer;
+#shapeSelector .squareSlot {
+    background-color: rgb(50, 50, 50);
+    margin: 4px;
+}
+
+#shapeSelector .squareSlot:nth-child(2) {
+    outline: 2px dashed white;
+    animation: blackWhiteAlternating 1s infinite;
 }
 
 @keyframes blackWhiteAlternating {
@@ -83,9 +88,4 @@ body {
     100% {
         outline-color: white;
     }
-}
-
-#shapeSelector .squareSlot:nth-child(2) {
-    outline: 2px dashed white;
-    animation: blackWhiteAlternating 1s infinite;
 }

@@ -11,8 +11,7 @@ const scoreNum = document.getElementById("scoreNum");
 const playAgainButton = document.getElementById("playAgainButton");
 
 //OTHER GLOBAL DECLARATIONS
-let selectedShapeOption = null;
-const highlightedGridSlotPositions = []; //highlights show where the given shape would be placed when the player hovers over a valid grid slot
+const placementPlanMarkedCells = []; //the marking shows how the selected shape would be placed when the player hovers over a valid playable cell
 const mainGridSlots = [];
 const shapeOptions = Array.from(document.querySelectorAll("#shapeSelector .shapeOption"));
 const shapeOptionSlotGrids = [];
@@ -28,6 +27,7 @@ const directionArrsByColor = new Map([
     ["purple", ["left", "right", "right", "left", "down"]],
     ["brown", []]
 ]);
+let selectedShapeOption = null;
 
 //MAIN LOGIC
 for (let i = 0; i < 10; i++) {
@@ -71,12 +71,13 @@ for (const slotGrid of shapeOptionSlotGrids) {
 
 for (const shapeOption of shapeOptions) {
     shapeOption.addEventListener("click", () => {
-        if (selectedShapeOption)
+        if (selectedShapeOption) {
             selectedShapeOption.style.border = "none";
+            unhighlightUnplayableCells();
+        }
 
         selectedShapeOption = shapeOption;
-
-        selectedShapeOption.style.border = "4px dashed white";
+        selectedShapeOption.style.border = "4px dashed " + (highlightUnplayableCells() === 100 ? "red" : "white");
     });
 }
 
@@ -97,24 +98,25 @@ for (let r = 0; r < 10; r++) {
                 gridSlot.style.backgroundColor = "rgb(70, 70, 70)";
             }
             
-            for (const [row, col] of highlightedGridSlotPositions)
+            for (const [row, col] of placementPlanMarkedCells)
                 if (mainGridSlots[row][col].style.backgroundColor === "rgb(150, 150, 150)")
                     mainGridSlots[row][col].style.backgroundColor = "rgb(70, 70, 70)";
         
-            highlightedGridSlotPositions.length = 0;
+            placementPlanMarkedCells.length = 0;
+            highlightUnplayableCells();
         });
 
         gridSlot.addEventListener("click", () => {
-            if (highlightedGridSlotPositions.length) {
+            if (placementPlanMarkedCells.length) {
                 scoreNum.innerHTML = Number(scoreNum.innerHTML) +
                 Array.from(selectedShapeOption.children).filter(slot => slot.style.backgroundColor !== "rgb(50, 50, 50)").length;
 
                 const color = getColorOfSelectedShapeOption();
 
-                for (const [r, c] of highlightedGridSlotPositions)
+                for (const [r, c] of placementPlanMarkedCells)
                     mainGridSlots[r][c].style.backgroundColor = color;
 
-                highlightedGridSlotPositions.length = 0;
+                placementPlanMarkedCells.length = 0;
                 
                 Array.from(selectedShapeOption.children).forEach(gridSlot => {
                     gridSlot.style.backgroundColor = "rgb(50, 50, 50)";
@@ -126,6 +128,7 @@ for (let r = 0; r < 10; r++) {
 
                 selectedShapeOption.style.border = "none";
                 selectedShapeOption = null;
+                unhighlightUnplayableCells();
 
                 clearFilledRowsAndColumns();
                 
@@ -179,12 +182,39 @@ function isPossibleToPlace(startR, startC, directionArr) {
     return true;
 }
 
+function highlightUnplayableCells() {
+    let unplayableCellCount = 0;
+
+    for (let r = 0; r < 10; r++) {
+        for (let c = 0; c < 10; c++) {
+            if (!isPossibleToPlace(r, c, directionArrsByColor.get(getColorOfSelectedShapeOption()))) {
+                mainGridSlots[r][c].style.boxShadow = "inset 0 0 12px red";
+                mainGridSlots[r][c].style.cursor = "not-allowed";
+                unplayableCellCount++;
+            }
+        }
+    }
+    
+    return unplayableCellCount;
+}
+
+function unhighlightUnplayableCells() {
+    for (let r = 0; r < 10; r++) {
+        for (let c = 0; c < 10; c++) {
+            mainGridSlots[r][c].style.boxShadow = "none";
+            mainGridSlots[r][c].style.cursor = "pointer";
+        }
+    }
+}
+
 //works with both the main grid and the option grids
 function putShapeInGrid(gridRepresentationArr, startR, startC, color, directionArr) {
     gridRepresentationArr[startR][startC].style.backgroundColor = color;
 
-    if (color === "rgb(150, 150, 150)")
-        highlightedGridSlotPositions.push([startR, startC]);
+    if (color === "rgb(150, 150, 150)") {
+        mainGridSlots[startR][startC].style.boxShadow = "none";
+        placementPlanMarkedCells.push([startR, startC]);
+    }
 
     let r = startR;
     let c = startC;
@@ -194,8 +224,10 @@ function putShapeInGrid(gridRepresentationArr, startR, startC, color, directionA
 
         gridRepresentationArr[r][c].style.backgroundColor = color;
 
-        if (color === "rgb(150, 150, 150)")
-            highlightedGridSlotPositions.push([r, c]);
+        if (color === "rgb(150, 150, 150)") {
+            mainGridSlots[r][c].style.boxShadow = "none";
+            placementPlanMarkedCells.push([r, c]);
+        }
     }
 }
 
