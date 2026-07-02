@@ -76,8 +76,12 @@ for (const shapeOption of shapeOptions) {
             unhighlightUnplayableCells();
         }
 
-        selectedShapeOption = shapeOption;
-        selectedShapeOption.style.border = "4px dashed " + (highlightUnplayableCells() === 100 ? "red" : "white");
+        if (shapeOption === selectedShapeOption) {
+            selectedShapeOption = null;
+        } else {
+            selectedShapeOption = shapeOption;
+            selectedShapeOption.style.border = "4px dashed " + (highlightUnplayableCells() === 100 ? "red" : "white");
+        }
     });
 }
 
@@ -88,15 +92,13 @@ for (let r = 0; r < 10; r++) {
         const gridSlot = mainGridSlots[r][c];
 
         gridSlot.addEventListener("mouseover", () => {
-            if (selectedShapeOption && isPossibleToPlace(r, c, directionArrsByColor.get(getColorOfSelectedShapeOption()))) {
+            if (selectedShapeOption && isPossibleToPlace(r, c, directionArrsByColor.get(getColorOfSelectedShapeOption())))
                 putShapeInGrid(mainGridSlots, r, c, "rgb(150, 150, 150)", directionArrsByColor.get(getColorOfSelectedShapeOption()));
-            }
         });
 
         gridSlot.addEventListener("mouseout", () => {
-            if (gridSlot.style.backgroundColor === "rgb(100, 100, 100)") {
-                gridSlot.style.backgroundColor = "rgb(70, 70, 70)";
-            }
+            if (!selectedShapeOption)
+                return;
             
             for (const [row, col] of placementPlanMarkedCells)
                 if (mainGridSlots[row][col].style.backgroundColor === "rgb(150, 150, 150)")
@@ -183,11 +185,15 @@ function isPossibleToPlace(startR, startC, directionArr) {
 }
 
 function highlightUnplayableCells() {
+    if (!selectedShapeOption)
+        return;
+
+    const selectedShapeOptionDirectionArr = directionArrsByColor.get(getColorOfSelectedShapeOption());
     let unplayableCellCount = 0;
 
     for (let r = 0; r < 10; r++) {
         for (let c = 0; c < 10; c++) {
-            if (!isPossibleToPlace(r, c, directionArrsByColor.get(getColorOfSelectedShapeOption()))) {
+            if (!isPossibleToPlace(r, c, selectedShapeOptionDirectionArr)) {
                 mainGridSlots[r][c].style.boxShadow = "inset 0 0 12px red";
                 mainGridSlots[r][c].style.cursor = "not-allowed";
                 unplayableCellCount++;
