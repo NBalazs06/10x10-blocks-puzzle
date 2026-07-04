@@ -215,18 +215,10 @@ function unhighlightUnplayableCells() {
 
 //works with both the main grid and the option grids
 function putShapeInGrid(gridRepresentationArr, startR, startC, color, directionArr) {
-    gridRepresentationArr[startR][startC].style.backgroundColor = color;
-
-    if (color === "rgb(150, 150, 150)") {
-        mainGridSlots[startR][startC].style.boxShadow = "none";
-        placementPlanMarkedCells.push([startR, startC]);
-    }
-
-    let r = startR;
-    let c = startC;
-
-    for (const direction of directionArr) {
-        [r, c] = getPositionAfterMoving(r, c, direction);
+    //the start position needs to get colored too, that is what happens when i === -1
+    for (let i = -1, r = startR, c = startC; i < directionArr.length; i++) {
+        if (i !== -1)
+            [r, c] = getPositionAfterMoving(r, c, directionArr[i]);
 
         gridRepresentationArr[r][c].style.backgroundColor = color;
 
